@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd
+		http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 扫描注解，并注册为 bean，在 orderServiceImpl 实现类中，调用接口的方法前，需要注册该接口为bean-->
+    <context:component-scan base-package="com.atguigu.gmall.service.impl"></context:component-scan>
+    <!-- 1、指定当前服务/应用的名字（同样的服务名字相同，不要和别的服务同名）,一般用当前的模块名 -->
+    <dubbo:application name="order-service-consumer"/>
+
+    <!-- 2、指定注册中心的位置 -->
+    <dubbo:registry protocol="zookeeper" address="192.168.81.128:2181"/>
+
+    <!--声明需要调用的远程服务的接口；生成远程服务代理,此时该接口对象注入到 IOC 中  -->
+    <dubbo:reference interface="com.atguigu.gmall.service.impl.UserService" id="userService" check="false" version="*" loadbalance=""/>
+    <dubbo:monitor protocol="registry"/>
+</beans>
